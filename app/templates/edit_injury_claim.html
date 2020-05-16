@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Injury Claims</h1>
+
+    <form action="" method="post">
+        {{ search_form.hidden_tag() }}
+        <p>
+            {{ search_form.injury_type.label }}<br>
+            {{ search_form.injury_type(size=6) }}<br>
+            {% for error in search_form.injury_type.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ search_form.injury_cause.label }}<br>
+            {{ search_form.injury_cause(size=6) }}<br>
+            {% for error in search_form.injury_cause.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ search_form.open_or_closed.label }}<br>
+            {{ search_form.open_or_closed(size=2) }}<br>
+            {% for error in search_form.open_or_closed.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ search_form.year_from.label }}<br>
+            {{ search_form.year_from(size=16) }}<br>
+            {% for error in search_form.year_from.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ search_form.year_to.label }}<br>
+            {{ search_form.year_to(size=16) }}<br>
+            {% for error in search_form.year_to.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+    {{ table }}
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.injury_type.label }}<br>
+            {{ form.injury_type(size=6) }}<br>
+            {% for error in form.injury_type.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.injury_cause.label }}<br>
+            {{ form.injury_cause(size=6) }}<br>
+            {% for error in form.injury_cause.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.open_or_closed.label }}<br>
+            {{ form.open_or_closed(size=2) }}<br>
+            {% for error in form.open_or_closed.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.year.label }}<br>
+            {{ form.year(size=16) }}<br>
+            {% for error in form.year.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.incurred_loss.label }}<br>
+            {{ form.incurred_loss(size=16) }}<br>
+            {% for error in form.incurred_loss.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.paid_loss.label }}<br>
+            {{ form.paid_loss(size=16) }}<br>
+            {% for error in form.paid_loss.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.description.label }}<br>
+            {{ form.description(size=128) }}<br>
+            {% for error in form.description.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

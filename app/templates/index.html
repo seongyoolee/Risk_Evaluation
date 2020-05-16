@@ -4,6 +4,7 @@
         <title>{{ title }} - Risk Evaluation</title>
     </head>
     <body>
-        <h1>Hello, {{ user.username }}!</h1>
+        <h1>Hi, {{ current_user.username }}!</h1>
+        <div><p>{{ current_user.username }} works at: <b>{{ current_user.company }}</b></p></div>
     </body>
 {% endblock %}
