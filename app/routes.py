@@ -86,13 +86,13 @@ def save_injury_claim(injury_claim, form):
 @app.route('/edit_injury_claim', methods=['GET', 'POST'])
 def edit_injury_claim():
     form = InjuryClaimForm()
-    search_form = InjuryClaimFilterForm()
+    search_form = InjuryClaimFilterForm(injury_type=['head', 'neck_spine', 'hands_arms', 'respiratory', 'feet_legs', 'torso'], injury_cause=['slips_trips_falls', 'emotional_distress', 'pet', 'chemical', 'equipment'], open_or_closed='open', year_from=1951, year_to=2020)
 
     # view table
     results = []
     qry = Injury.query.filter_by(company=current_user.company)
     if search_form.validate_on_submit():
-        results = qry.filter(Injury.injury_type==search_form.injury_type.data[0], Injury.injury_cause==search_form.injury_cause.data[0], Injury.year>=search_form.year_from.data, Injury.year<=search_form.year_to.data, Injury.open_or_closed==search_form.open_or_closed.data)
+        results = qry.filter(Injury.year>=search_form.year_from.data, Injury.year<=search_form.year_to.data, Injury.open_or_closed==search_form.open_or_closed.data, Injury.injury_type.in_(search_form.injury_type.data), Injury.injury_cause.in_(search_form.injury_cause.data))
     else:
         results = qry.all()
 
