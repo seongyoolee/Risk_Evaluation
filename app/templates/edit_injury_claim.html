@@ -3,6 +3,7 @@
 {% block content %}
     <h1>Injury Claims</h1>
 
+    {% if search_form %}
     <form action="" method="post">
         {{ search_form.hidden_tag() }}
         <p>
@@ -42,8 +43,11 @@
         </p>
         <p>{{ form.submit() }}</p>
     </form>
+    {% endif %}
     
+    {% if table %}
     {{ table }}
+    {% endif %}
 
     <form action="" method="post">
         {{ form.hidden_tag() }}
@@ -97,5 +101,8 @@
             {% endfor %}
         </p>
         <p>{{ form.submit() }}</p>
+        {% if not table %}
+        <p>{{ form.delete() }}</p>
+        {% endif %}
     </form>
 {% endblock %}

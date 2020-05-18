@@ -42,6 +42,7 @@ class InjuryClaimForm(FlaskForm):
     paid_loss = FloatField('Paid Loss', validators=[DataRequired()])
     description = StringField('Description', validators=[DataRequired()])
     submit = SubmitField('Submit')
+    delete = SubmitField('Delete')
 
 class InjuryClaimFilterForm(FlaskForm):
     injury_type = SelectMultipleField(u'Injury Type', 

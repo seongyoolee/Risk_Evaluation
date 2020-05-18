@@ -8,6 +8,7 @@ from app.tables import InjuryClaimTable
 from app.models import User, Injury
 
 import datetime
+import pandas as pd
 from termcolor import colored
 
 
@@ -96,7 +97,7 @@ def edit_injury_claim():
     else:
         results = qry.all()
 
-    # check 
+    # check results
     if not results:
         flash('No records found.')
         return render_template('edit_injury_claim.html', title='Add/Edit Injury Claims', form=form, search_form=search_form)
@@ -136,10 +137,46 @@ def edit(id):
     if injury_claim:
         form = InjuryClaimForm(formdata=request.form, obj=injury_claim)
         if request.method == 'POST' and form.validate():
-            # save edits to db
-            save_injury_claim(injury_claim, form)
-            flash('Injury claim updated successfully!')
+            if form.submit.data:
+                # save edits to db
+                save_injury_claim(injury_claim, form)
+                flash('Injury claim updated successfully!')
+            elif form.delete.data:
+                # delete from db
+                db.session.delete(injury_claim)
+                db.session.commit()
+                flash('Injury claim deleted successfully!')
             return redirect(url_for('edit_injury_claim'))
-        return render_template('edit_injury_claim.html', form=form)
+        return render_template('edit_injury_claim.html', form=form, search_form=None, table=None)
     else:
         return 'Error loading #{id}'.format(id=id)
+
+@app.route('/three_year_claim_average', methods=['GET'])
+def three_year_claim_average():
+    year0 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 3).all()
+    year1 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 2).all()
+    year2 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 1).all()
+    years = [year0, year1, year2]
+    inflation_rate = 10
+
+    print(colored(year0, "blue"))
+    print(colored(year1, "blue"))
+    print(colored(year2, "blue"))
+
+    incurred_avg = 0
+    paid_avg = 0
+    for i in range(0, 3):
+        df = pd.DataFrame(years[i], columns =['Incurred Loss', 'Paid Loss'])
+        df['Incurred PV'] = df['Incurred Loss'] * ((1 + (inflation_rate / 100)) ** i)
+        df['Paid PV'] = df['Paid Loss'] * ((1 + (inflation_rate / 100)) ** i)
+        incurred_avg += df.sum(axis=0)['Incurred PV']
+        paid_avg += df.sum(axis=0)['Paid PV']
+        print(colored(df, "yellow"))
+        print(colored(df.sum(axis=0), "green"))
+
+    incurred_avg /= 3
+    incurred_avg = str(round(incurred_avg, 2))
+    paid_avg /= 3
+    paid_avg = str(round(paid_avg, 2))
+    
+    return render_template("three_year_claim_average.html", title='3 Year Claim Average', table=None, inflation_rate=inflation_rate, incurred_avg=incurred_avg, paid_avg=paid_avg)

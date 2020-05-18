@@ -1,4 +1,4 @@
-from flask_table import Table, Col, LinkCol
+from flask_table import Table, Col, LinkCol, ButtonCol
 
 class DollarCol(Col):
     def td_format(self, content):
@@ -15,3 +15,4 @@ class InjuryClaimTable(Table):
     paid_loss = DollarCol('Paid Loss')
     description = Col('Description')
     edit = LinkCol('Edit', 'edit', url_kwargs=dict(id='id'))
+    

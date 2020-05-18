@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>3 Year Claim Average</h1>
+    <p>Inflation Rate: {{ inflation_rate }}%</p>
+    <p>3 Year Incurred Loss Average: ${{ incurred_avg }}</p>
+    <p>3 Year Paid Loss Average: ${{ paid_avg }}</p>
+
+    {{ table }}
+{% endblock %}
