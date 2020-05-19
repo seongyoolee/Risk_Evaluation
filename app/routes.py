@@ -153,30 +153,30 @@ def edit(id):
 
 @app.route('/three_year_claim_average', methods=['GET'])
 def three_year_claim_average():
-    year0 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 3).all()
-    year1 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 2).all()
-    year2 = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss).filter_by(company=current_user.company, year=datetime.datetime.now().year - 1).all()
-    years = [year0, year1, year2]
+    injury_claim_all = Injury.query.filter_by(company=current_user.company)
+    injury_claim_losses = Injury.query.with_entities(Injury.incurred_loss, Injury.paid_loss)
     inflation_rate = 10
-
-    print(colored(year0, "blue"))
-    print(colored(year1, "blue"))
-    print(colored(year2, "blue"))
-
     incurred_avg = 0
     paid_avg = 0
+
+    tables = []
     for i in range(0, 3):
-        df = pd.DataFrame(years[i], columns =['Incurred Loss', 'Paid Loss'])
+        # injury claim table
+        table = InjuryClaimTable(injury_claim_all.filter(Injury.year==datetime.datetime.now().year - (3 - i)))
+        table.border = True
+        tables.append(table)
+
+        # losses for the year
+        year = injury_claim_losses.filter_by(company=current_user.company, year=datetime.datetime.now().year - (3 - i)).all()
+        df = pd.DataFrame(year, columns =['Incurred Loss', 'Paid Loss'])
         df['Incurred PV'] = df['Incurred Loss'] * ((1 + (inflation_rate / 100)) ** i)
         df['Paid PV'] = df['Paid Loss'] * ((1 + (inflation_rate / 100)) ** i)
         incurred_avg += df.sum(axis=0)['Incurred PV']
         paid_avg += df.sum(axis=0)['Paid PV']
-        print(colored(df, "yellow"))
-        print(colored(df.sum(axis=0), "green"))
 
     incurred_avg /= 3
     incurred_avg = str(round(incurred_avg, 2))
     paid_avg /= 3
     paid_avg = str(round(paid_avg, 2))
     
-    return render_template("three_year_claim_average.html", title='3 Year Claim Average', table=None, inflation_rate=inflation_rate, incurred_avg=incurred_avg, paid_avg=paid_avg)
+    return render_template("three_year_claim_average.html", title='3 Year Claim Average', tables=tables, inflation_rate=inflation_rate, incurred_avg=incurred_avg, paid_avg=paid_avg)
