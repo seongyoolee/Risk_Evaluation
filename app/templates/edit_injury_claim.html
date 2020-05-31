@@ -41,6 +41,13 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
+        <p>
+            {{ search_form.sort_by.label }}<br>
+            {{ search_form.sort_by(size=6) }}<br>
+            {% for error in search_form.sort_by.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
     {% endif %}

@@ -49,8 +49,10 @@ class InjuryClaimFilterForm(FlaskForm):
         choices=[('head', 'Head'), ('neck_spine', 'Neck & Spine'), ('hands_arms', 'Hands & Arms'), ('respiratory', 'Respiratory'), ('feet_legs', 'Feet & Legs'), ('torso', 'Torso')])
     injury_cause = SelectMultipleField(u'Injury Cause', 
         choices=[('slips_trips_falls', 'Slips, Trips, Falls'), ('emotional_distress', 'Emotional Distress'), ('pet', 'Pet Related'), ('chemical', 'Chemical'), ('equipment', 'Equipment')])
-    open_or_closed = SelectField(u'Open/Closed', 
+    open_or_closed = SelectMultipleField(u'Open/Closed', 
         choices=[('open', 'Open'), ('closed', 'Closed')])
     year_from = IntegerField('Year From')
     year_to = IntegerField('Year To')
+    sort_by = SelectField(u'Sort By', 
+        choices=[('injury_type', 'Injury Type'), ('injury_cause', 'Injury_Cause'), ('open_or_closed', 'Open/Closed'), ('year', 'Year'), ('incurred_loss', 'Incurred Loss'), ('paid_loss', 'Paid Loss')])
     search = SubmitField('Search')
